@@ -2,7 +2,7 @@
   "name": "blogger_server",
   "version": "1.0.0",
   "description": "This is sever for my blogger app",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
