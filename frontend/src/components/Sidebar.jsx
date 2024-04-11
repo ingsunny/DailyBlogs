@@ -34,7 +34,15 @@ const Sidebar = () => {
             <li className="border-b py-3 border-zinc-600">Home</li>
             <li className="border-b py-3 border-zinc-600">About</li>
             <li className="border-b py-3 border-zinc-600">Contact</li>
-            <li className="border-b py-3 border-zinc-600">Login / Register</li>
+            {/* <li className="border-b py-3 border-zinc-600">Login / Register</li> */}
+            <li className="border-b py-3 border-zinc-600">Logout</li>
+            <li className="border-b py-3 flex justify-between border-zinc-600">
+              <h3>User profile</h3>
+              <span className="rotate-180">^</span>
+            </li>
+          </ul>
+          <ul className="uppercase text-xs font-semibold flex flex-col ">
+            <li className="border-b py-3 border-zinc-600">Home</li>
           </ul>
         </div>
 
