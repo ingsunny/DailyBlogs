@@ -1,15 +1,11 @@
 # Blogging Platform Project
 
-## Overview
-
-This project aims to create a simple and user-friendly blogging platform. It includes features such as user registration, authentication, blog post creation, commenting system, search functionality, and mobile-friendly design. The project is developed as part of an internship at CodSoft.
-
 ## Folder Structure
 
 The project is structured as follows:
 
-- `CodSoft/backend/`: Contains the backend code.
-- `CodSoft/frontend/`: Contains the frontend code.
+- `DailyBlogs/backend/`: Contains the backend code.
+- `DailyBlogs/frontend/`: Contains the frontend code.
 
 ## Features
 
@@ -18,9 +14,9 @@ The project is structured as follows:
 3. **Front-End Development:** Build the client-side interface using HTML, CSS, and JavaScript, focusing on user-friendly features like post listing, search, and user profile pages.
 4. **User Authentication:** Implement user registration and login functionality.
 5. **Blog Post Creation:** Enable users to create and publish blog posts.
-6. **Commenting System:** Allow users to leave comments on blog posts.
-7. **Search Functionality:** Implement basic search functionality to help users find specific blog posts.
-8. **Mobile-Friendly Design:** Ensure the platform is responsive and optimized for mobile devices.
+<!-- 6. **Commenting System:** Allow users to leave comments on blog posts. -->
+6. **Search Functionality:** Implement basic search functionality to help users find specific blog posts.
+7. **Mobile-Friendly Design:** Ensure the platform is responsive and optimized for mobile devices.
 
 <!-- Post Listing,
 Search Post,
@@ -33,13 +29,13 @@ Responsive Desing -->
 
 ### Backend
 
-1. Navigate to the `CodSoft/backend/` directory.
+1. Navigate to the `DailyBlogs/backend/` directory.
 2. Install the dependencies using `npm install`.
 3. Start the backend server using `npm start`.
 
 ### Frontend
 
-1. Navigate to the `CodSoft/frontend/` directory.
+1. Navigate to the `DailyBlogs/frontend/` directory.
 2. Install the dependencies using `npm install`.
 3. Start the frontend server using `npm start`.
 
