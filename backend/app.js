@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "./config/dotenv.js";
 import connectToDatabase from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 import logRequest from "./middleware/logRequest.js";
 
 connectToDatabase();
@@ -20,9 +21,10 @@ dotenv.config();
 
 // Defining Routes to App
 app.use("/api/auth", authRoutes);
+app.use("/api/post", postRoutes);
 
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`http://localhost:${port}`);
 });

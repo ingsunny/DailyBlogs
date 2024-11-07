@@ -1,3 +1,9 @@
-import postRoutes from "./routes/postRoutes.js";
+import express from "express";
+import { createPost, getAllPosts } from "../controllers/postController.js";
 
-app.use("/api/posts", postRoutes);
+const router = express.Router();
+
+router.post("/create", createPost);
+router.get("/get_posts", getAllPosts);
+
+export default router;

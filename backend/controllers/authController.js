@@ -5,25 +5,41 @@ import bcryptjs from "bcryptjs";
 // Basic Signup
 
 export const signup = async (req, res) => {
-  const { username, email, password } = req.body;
-
-  const catchDuplication = await User.findOne({ email });
-
-  if (catchDuplication) {
-    return res.status(400).json({ message: "User already exists" });
-    // console.log("duplication not allowed");
-  }
-
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-
-  const newUser = new User({ username, email, password: hashedPassword });
+  const { name, email, password, countryCode, phoneNumber } = req.body;
 
   try {
+    const catchDuplication = await User.findOne({ email });
+
+    if (catchDuplication) {
+      console.log("duplication not allowed");
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      countryCode,
+      phoneNumber,
+    });
+
     await newUser.save();
-    res.status(201).json({ message: "user created successfully" });
+    res.status(200).json({
+      success: true,
+      message: "User created successfully!",
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        countryCode: newUser.countryCode,
+        phoneNumber: newUser.phoneNumber,
+      },
+    });
   } catch (error) {
-    // next(error);
-    res.status(404).json({ message: "error happned" });
+    console.error("Error during signup:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
   }
 };
 
@@ -33,11 +49,12 @@ export const signin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    console.log("this", email, password);
     // find user in db by email
     const validUser = await User.findOne({ email });
 
     if (!validUser) {
-      return res.status(400).json({ error: "User does not exist" });
+      return res.status(400).json({ message: "User does not exist" });
     }
 
     // check if password is correct
@@ -54,7 +71,7 @@ export const signin = async (req, res) => {
 
     res
       .cookie("token", token, {
-        httpOnly: true,
+        // httpOnly: true,
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       })
       .status(200)
