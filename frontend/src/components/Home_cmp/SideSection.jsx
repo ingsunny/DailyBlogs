@@ -1,14 +1,65 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import {
+  loadNoSuchPost,
+  loadSearchPostComplete,
+  loadSearchPostSuccess,
+} from "../../redux/slices/postSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const SidePanel = () => {
+const SideSection = () => {
+  const [keyword, setKeyword] = useState(""); // State to store the search keyword
+  // const [searchResults, setSearchResults] = useState([]); // State to store the search results
+  // const [loading, setLoading] = useState(false); // State to handle loading state
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSearch = async (event) => {
+    const value = event.target.value;
+    setKeyword(value); // Update the search keyword
+    navigate("/");
+
+    if (value.trim() === "") {
+      // setSearchResults([]);
+      dispatch(loadSearchPostComplete());
+      return;
+    }
+
+    // setLoading(true); // Set loading state to true when starting the search
+
+    try {
+      // Assuming you have a backend API to fetch the search results
+      const response = await axios.get(
+        `http://localhost:3000/api/post/search?keyword=${value}`
+      );
+
+      dispatch(
+        loadSearchPostSuccess({
+          searchedPosts: response.data,
+        })
+      );
+
+      console.log("search res", response.data);
+      // setSearchResults(response.data); // Update the search results with the response data
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    } finally {
+      // setLoading(false); // Set loading state to false after the search is done
+    }
+  };
+
+  // console.log("search res", searchResults);
   return (
-    <div className="w-72 hidden lg:block">
+    <div className="w-72 hidden lg:block ">
       {/* search box  */}
-      <div className=" py-2">
-        <div className="border-b w-72 flex justify-between pr-4">
+      <div className="pb-2">
+        <div className=" border-b w-72 flex justify-between pr-4">
           <input
-            className=" w-full text-sm text-semibold border-none outline-none py-2.5"
             type="text"
+            value={keyword}
+            onChange={handleSearch}
+            className="w-full text-sm text-semibold border-none outline-none py-2.5 "
             placeholder="Type your search query here.."
           />
           <svg
@@ -29,7 +80,6 @@ const SidePanel = () => {
       </div>
 
       {/* Popular Post  */}
-
       <div className="">
         <h1 className="font-medium text-md pb-4">POPULAR POSTS</h1>
         {/* <div className="flex justify-between items-end w-full border-red-400 border-2"> */}
@@ -47,7 +97,6 @@ const SidePanel = () => {
           </div>
         </div>
       </div>
-
       {/* Recent Post  */}
       <div className="">
         <h1 className="font-medium text-md pt-7">RECENT POSTS</h1>
@@ -66,7 +115,6 @@ const SidePanel = () => {
           </div>
         </div>
       </div>
-
       {/* all categoris list  */}
       <div className="">
         <h1 className="font-medium text-md pt-7">CATEGORIES</h1>
@@ -111,4 +159,4 @@ const SidePanel = () => {
   );
 };
 
-export default SidePanel;
+export default SideSection;
