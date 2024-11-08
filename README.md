@@ -41,5 +41,5 @@ Responsive Desing -->
 
 ## Technologies Used
 
-- Frontend: React with Vite
-- Backend: Node.js with MongoDB
+- Frontend: React.js , Tailwindcss
+- Backend: Node.js, MongoDB
