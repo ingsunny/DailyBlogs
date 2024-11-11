@@ -41,7 +41,7 @@ const CreatePost = () => {
     try {
       // Use Axios to send POST request
       const response = await axios.post(
-        "http://localhost:3000/api/post/create",
+        "http://localhost:4000/api/post/create",
         postData
       );
 

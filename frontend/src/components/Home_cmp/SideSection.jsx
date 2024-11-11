@@ -31,7 +31,7 @@ const SideSection = () => {
     try {
       // Assuming you have a backend API to fetch the search results
       const response = await axios.get(
-        `http://localhost:3000/api/post/search?keyword=${value}`
+        `http://localhost:4000/api/post/search?keyword=${value}`
       );
 
       dispatch(

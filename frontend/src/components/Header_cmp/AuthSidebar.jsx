@@ -28,7 +28,7 @@ const AuthSidebar = ({ loginPanelOpen, setLoginPanelOpen }) => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/signin",
+        `http://localhost:4000/api/auth/signin`,
         formData
       );
 
@@ -61,7 +61,7 @@ const AuthSidebar = ({ loginPanelOpen, setLoginPanelOpen }) => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/signup",
+        "http://localhost:4000/api/auth/signup",
         formData
       );
 

@@ -27,7 +27,7 @@ const Posts = () => {
     dispatch(startLoading());
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/post/get_posts?page=${page}&limit=5`
+        `http://localhost:4000/api/post/get_posts?page=${page}&limit=5`
       );
       if (response.data.posts.length > 0) {
         dispatch(resetPosts({ hasMore: true }));
@@ -63,7 +63,7 @@ const Posts = () => {
       behavior: "smooth",
     });
     try {
-      response = await axios.post("http://localhost:3000/api/post/add_views", {
+      response = await axios.post("http://localhost:4000/api/post/add_views", {
         postId: postId,
       });
     } catch (error) {}
