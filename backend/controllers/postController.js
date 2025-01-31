@@ -27,13 +27,20 @@ export const createPost = async (req, res) => {
 export const getAllPosts = async (req, res) => {
   const page = parseInt(req.query.page) || 1; // default to page 1
   const limit = parseInt(req.query.limit) || 10; // default to 10 posts per page
+  const selectedCategory = req.query.category; // Get category from the query string
 
   try {
-    const posts = await Post.find()
+    // Construct the query to filter by category if provided
+    let query = {};
+    if (selectedCategory && selectedCategory !== "All") {
+      query.category = selectedCategory; // Filter posts by category
+    }
+
+    const posts = await Post.find(query) // Apply category filter if necessary
       .skip((page - 1) * limit)
       .limit(limit);
 
-    const totalPosts = await Post.countDocuments();
+    const totalPosts = await Post.countDocuments(query); // Count posts with the applied filter
     const totalPages = Math.ceil(totalPosts / limit);
 
     res.status(200).json({

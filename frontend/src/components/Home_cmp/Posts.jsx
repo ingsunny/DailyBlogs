@@ -21,13 +21,16 @@ const Posts = () => {
     searching,
     searchedPosts,
     noSuchPost,
+    selectedCategory,
   } = useSelector((state) => state.post);
 
   const loadPosts = async (page = 1) => {
     dispatch(startLoading());
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/post/get_posts?page=${page}&limit=5`
+        `http://localhost:4000/api/post/get_posts?page=${page}&limit=5${
+          selectedCategory !== "All" ? `&category=${selectedCategory}` : ""
+        }`
       );
       if (response.data.posts.length > 0) {
         dispatch(resetPosts({ hasMore: true }));
@@ -42,14 +45,17 @@ const Posts = () => {
       } else if (response.data.posts.length == 0) {
         dispatch(resetPosts({ hasMore: false }));
       }
+
+      console.log(response.data);
     } catch (error) {
       dispatch(loadPostsFailure(error.message));
     }
   };
 
   useEffect(() => {
+    dispatch(resetPosts({ hasMore: true }));
     loadPosts();
-  }, []);
+  }, [selectedCategory]);
 
   const handleLoadMore = () => {
     if (hasMore && !loading) {

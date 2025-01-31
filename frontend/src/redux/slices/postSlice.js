@@ -11,6 +11,7 @@ const initialState = {
   error: null,
   totalPages: 0,
   totalPosts: 0,
+  selectedCategory: "All",
 };
 
 const postSlice = createSlice({
@@ -59,6 +60,9 @@ const postSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    selectCategory: (state, action) => {
+      state.selectedCategory = action.payload;
+    },
   },
 });
 
@@ -71,5 +75,6 @@ export const {
   loadSearchPostSuccess,
   loadSearchPostComplete,
   loadNoSuchPost,
+  selectCategory,
 } = postSlice.actions;
 export default postSlice.reducer;

@@ -4,20 +4,61 @@ import {
   loadNoSuchPost,
   loadSearchPostComplete,
   loadSearchPostSuccess,
+  selectCategory,
 } from "../../redux/slices/postSlice";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 const SideSection = () => {
-  const [keyword, setKeyword] = useState(""); // State to store the search keyword
-  // const [searchResults, setSearchResults] = useState([]); // State to store the search results
-  // const [loading, setLoading] = useState(false); // State to handle loading state
-  const dispatch = useDispatch();
+  const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const { selectedCategory } = useSelector((state) => state.post);
+  const { posts } = useSelector((state) => state.post);
+
+  const mostPopularPost = posts?.reduce(
+    (max, post) => (post.views > (max?.views || 0) ? post : max),
+    null
+  );
+
+  const mostRecentPost = posts?.reduce(
+    (latest, post) =>
+      new Date(post.createdAt) > new Date(latest?.createdAt || 0)
+        ? post
+        : latest,
+    null
+  );
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const categories = [
+    "All",
+    "Food",
+    "Lifestyle",
+    "Health",
+    "Fitness",
+    "Fashion",
+    "Parenting",
+    "Travel",
+    "Technology",
+    "Finance",
+  ];
+
+  const handleCategorySelect = (category) => {
+    dispatch(selectCategory(category));
+  };
 
   const handleSearch = async (event) => {
     const value = event.target.value;
-    setKeyword(value); // Update the search keyword
+    setKeyword(value);
     navigate("/");
 
     if (value.trim() === "") {
@@ -26,10 +67,7 @@ const SideSection = () => {
       return;
     }
 
-    // setLoading(true); // Set loading state to true when starting the search
-
     try {
-      // Assuming you have a backend API to fetch the search results
       const response = await axios.get(
         `http://localhost:4000/api/post/search?keyword=${value}`
       );
@@ -41,7 +79,6 @@ const SideSection = () => {
       );
 
       console.log("search res", response.data);
-      // setSearchResults(response.data); // Update the search results with the response data
     } catch (error) {
       console.error("Error fetching search results:", error);
     } finally {
@@ -49,7 +86,6 @@ const SideSection = () => {
     }
   };
 
-  // console.log("search res", searchResults);
   return (
     <div className="w-72 hidden lg:block ">
       {/* search box  */}
@@ -80,23 +116,26 @@ const SideSection = () => {
       </div>
 
       {/* Popular Post  */}
-      <div className="">
-        <h1 className="font-medium text-md pb-4">POPULAR POSTS</h1>
-        {/* <div className="flex justify-between items-end w-full border-red-400 border-2"> */}
-        <div className="relative flex flex-col">
-          <img
-            className="w-full h-52 object-cover"
-            src="https://images.pexels.com/photos/27072852/pexels-photo-27072852/free-photo-of-close-up-of-a-triangular-roof.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            alt=""
-          />
-          <div className="absolute bottom-0 left-0 w-full bg-gradient-to-b from-[#00000006] to-[#000000c3] p-2">
-            <h4 className="text-white text-sm">March 20, 2023</h4>
-            <h3 className="pb-2 text-white text-wrap text-lg">
-              Discover Your Inner Genius To Better
-            </h3>
-          </div>
+      <h1 className="font-medium text-md pb-4">POPULAR POSTS</h1>
+      {/* <div className="flex justify-between items-end w-full border-red-400 border-2"> */}
+      <Link
+        to={`/post/${mostPopularPost?.category}/${mostPopularPost?._id}`}
+        className="relative flex flex-col"
+      >
+        <img
+          className="w-full h-52 object-cover"
+          src={mostPopularPost?.thumbnail_link}
+          alt=""
+        />
+        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-b from-[#00000006] to-[#000000c3] p-2">
+          <h4 className="text-white text-sm">
+            {formatDate(mostPopularPost?.createdAt)}
+          </h4>
+          <h3 className="pb-2 text-white text-wrap text-lg">
+            {mostPopularPost?.title}
+          </h3>
         </div>
-      </div>
+      </Link>
       {/* Recent Post  */}
       <div className="">
         <h1 className="font-medium text-md pt-7">RECENT POSTS</h1>
@@ -104,14 +143,16 @@ const SideSection = () => {
         <div className="flex gap-2 items-start py-3">
           <img
             className="w-[4.1rem] h-12 object-cover"
-            src="https://images.pexels.com/photos/16884194/pexels-photo-16884194/free-photo-of-blonde-with-dog-by-blue-door.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+            src={mostRecentPost?.thumbnail_link}
             alt=""
           />
           <div className="leading-[12px]">
             <h5 className="text-sm leading-[17px] font-medium">
-              Discover Your inner Genius To Bette better
+              {mostRecentPost?.title}
             </h5>
-            <span className="text-xs font-medium">MAR 23, 2021</span>
+            <span className="text-xs font-medium">
+              {formatDate(mostRecentPost?.createdAt)}
+            </span>
           </div>
         </div>
       </div>
@@ -120,39 +161,17 @@ const SideSection = () => {
         <h1 className="font-medium text-md pt-7">CATEGORIES</h1>
 
         <ul className="text-sm">
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            All
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Food
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Lifestyle
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Health
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Fitness
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Lifestyle
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Fashion
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Parenting
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Travel
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Technology
-          </li>
-          <li className="flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50">
-            Finance
-          </li>
+          {categories.map((category) => (
+            <li
+              key={category}
+              className={`flex gap-2 items-start border-b py-2 px-2 cursor-pointer mb-1 hover:bg-gray-100 bg-gray-50 ${
+                selectedCategory === category ? "bg-gray-200" : ""
+              }`}
+              onClick={() => handleCategorySelect(category)}
+            >
+              {category}
+            </li>
+          ))}
         </ul>
       </div>
     </div>
